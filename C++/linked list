@@ -1,0 +1,164 @@
+#include <iostream>
+using namespace std;
+
+class node{
+    public:
+    int data;
+    node* next;
+    node(int val){
+        data = val;
+        next = NULL;
+    }
+};
+
+void insertAtTail(node* head, int val){
+    node* newNode = new node(val);
+    if(head == NULL){
+        head = newNode;
+        return;
+    }
+    node* temp = head;
+    while(temp->next != NULL){
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+void insertAtHead(node* &head, int val){
+    node* newNode = new node(val);
+    if(head == NULL){
+        head = newNode;
+        return;
+    }
+    node* temp = head;
+    newNode->next = temp;
+    head = newNode;
+    
+}
+void deleteElement(node* head, int pos){
+    node* temp = head;
+    int x = pos-2;
+    while(x--){
+        temp = temp->next;
+    }
+    temp->next = temp->next->next;
+}
+void display(node* head){
+    node* temp = head;
+    while(temp != NULL){
+        cout << " " << temp->data<<" ";
+        temp = temp->next;
+    }
+}
+void insertAtPosition(node* &head, int pos, int val){
+    node* newNode = new node(val);
+    if(pos == 0){
+        newNode->next = head->next;
+        head = newNode;
+        return;
+    }
+    node* temp = head;
+    int x = pos-1;
+    while(x--){
+        temp = temp->next;
+    }
+    newNode->next = temp->next;
+    temp->next = newNode;  
+}
+void reverse(node* &head){
+    node* prev = NULL;
+    node* nex = NULL;
+    node*  current = head;
+    while(current != NULL){
+        nex = current->next;
+        current->next = prev;
+        prev = current;
+        current = nex;
+    }
+    head = prev;
+}
+node* reversek(node* head, int k){
+    node *prev = NULL, *nex = NULL, *current = head;
+    int count = 0;
+    while(current != NULL && count < k){
+        nex = current->next;
+        current->next = prev;
+        prev = current;
+        current = nex;
+        count++;
+    }
+    if(nex != NULL){
+        head->next = reversek(nex,k);
+    }
+    return prev;
+}
+
+void makeLoop(node* head, int pos){
+    node* temp = head;
+    node* startpos;
+    int count = 1;
+    while( temp->next != NULL ){
+        if(count == pos){
+            startpos = temp;
+        }
+        temp = temp->next;
+        count++;
+    }
+    temp->next = startpos;
+}
+
+bool isThereALoop(node* head){
+    node* fast=head;
+    node* slow=head;
+    while(fast != NULL && fast->next != NULL)
+    {
+     slow = slow->next;   
+     fast = fast->next->next;
+        if(fast == slow){
+            return true;
+        }   
+    }
+    return false;
+}
+
+void removingLoop(node*head){
+    node* fast=head;
+    node* slow=head;
+    while(fast != NULL && fast->next != NULL)
+    {
+     slow = slow->next;   
+     fast = fast->next->next;
+        if(fast == slow){
+            break;
+        }   
+    }
+    fast = head;
+    while(fast->next != slow->next){
+        fast = fast->next;
+        slow = slow->next;
+    }
+    slow->next = NULL;
+}
+
+int main(){
+    node* head = new node(3);
+    insertAtTail(head, 4);
+    insertAtTail(head, 5);
+    insertAtTail(head, 6);
+    insertAtHead(head, 0);
+    deleteElement(head, 4);
+    insertAtPosition(head, 3, 5);
+    display(head);
+    cout << endl;
+    reverse(head);
+    display(head);
+    cout << endl;
+    node* newHead = reversek(head,2);
+    display(newHead);
+    cout << endl;
+    cout << "loops \n";
+    makeLoop(head, 3);
+    cout << isThereALoop(head);
+    cout << "\n loops \n";
+    removingLoop(head);
+    cout << isThereALoop(head);
+}
