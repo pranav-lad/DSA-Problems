@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+int kadane(vector<int> arr){
+    int sum=0;
+    int max = INT_MIN;
+    for(int i : arr){
+        if(sum<0)sum=0;
+        sum+=i;
+        max = max>sum?max:sum;
+    }
+    return max;
+}
+
+int maxSumRectangle(vector<vector<int>>& arr, int n, int m)
+{
+    int max=INT_MIN, currmax=0;
+    vector<int> v(n);
+	for(int i=0; i<m; i++){
+        fill(v.begin(), v.end(),0);
+        for(int j=i; j<m;j++){
+            for(int k=0; k<n; k++){
+                v[k] += arr[k][j];
+            }
+            currmax = kadane(v);
+            max = max>currmax?max:currmax;
+        }
+    }
+    return max;
+}
